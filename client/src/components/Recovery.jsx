@@ -1,4 +1,4 @@
-const recovery = () => {
-  return <div>recovery</div>;
+const Recovery = () => {
+  return <div>R</div>;
 };
-export default recovery;
+export default Recovery;
