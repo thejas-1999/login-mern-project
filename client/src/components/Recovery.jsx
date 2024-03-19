@@ -50,8 +50,8 @@ const Recovery = () => {
 
             <div className="text-center py-4">
               <span className="text-gray-500">
-                Cant't get OTP<span> </span>
-                <button className="text-red-500">Recover Now</button>
+                Cant't get OTP?
+                <button className="text-red-500">Resend OTP</button>
               </span>
             </div>
           </form>
