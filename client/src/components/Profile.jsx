@@ -8,6 +8,7 @@ import { passwordValidate } from "../helper/Validate";
 import convertToBase64 from "../helper/Convert";
 import { registrationValidation } from "../helper/Validate";
 import { profileValidation } from "../helper/Validate";
+import extend from "../styles/Profile.module.css";
 
 const Profile = () => {
   const [file, setFile] = useState(null); // Initialize file state to null
@@ -45,7 +46,7 @@ const Profile = () => {
       <Toaster position="top-center" reverseOrder={false}></Toaster>
       <div className="flex justify-center items-center h-screen">
         <div
-          className={styles.glass}
+          className={`${styles.glass} ${extend.glass}`}
           style={{
             height: "108vh",
             marginTop: "15vh",
@@ -66,7 +67,7 @@ const Profile = () => {
               <label htmlFor="profile">
                 <img
                   src={file || avatar} // Use file or default avatar
-                  className={styles.profile_img}
+                  className={`${styles.profile_img} ${extend.profile_img}`}
                   alt="avatar"
                 />
               </label>
@@ -84,13 +85,13 @@ const Profile = () => {
                   {...formik.getFieldProps("firstName")}
                   type="text"
                   placeholder="First Name"
-                  className={styles.textbox}
+                  className={`${styles.textbox} ${extend.textbox}`}
                 />
                 <input
                   {...formik.getFieldProps("lastName")}
                   type="text"
                   placeholder="Last Name"
-                  className={styles.textbox}
+                  className={`${styles.textbox} ${extend.textbox}`}
                 />
               </div>
 
@@ -99,13 +100,13 @@ const Profile = () => {
                   {...formik.getFieldProps("email")}
                   type="text"
                   placeholder="email"
-                  className={styles.textbox}
+                  className={`${styles.textbox} ${extend.textbox}`}
                 />
                 <input
                   {...formik.getFieldProps("mobileNumber")}
                   type="text"
                   placeholder="Mobile Number"
-                  className={styles.textbox}
+                  className={`${styles.textbox} ${extend.textbox}`}
                 />
               </div>
 
@@ -113,7 +114,7 @@ const Profile = () => {
                 {...formik.getFieldProps("address")}
                 type="text"
                 placeholder="address"
-                className={styles.textbox}
+                className={`${styles.textbox} ${extend.textbox}`}
               />
 
               <button type="submit" className={`${styles.btn} bg-indigo-500`}>
