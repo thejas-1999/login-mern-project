@@ -5,33 +5,43 @@ import styles from "../styles/Username.module.css";
 import { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 import { passwordValidate } from "../helper/Validate";
+import convertToBase64 from "../helper/Convert";
+import { registrationValidation } from "../helper/Validate";
 
 const Register = () => {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null); // Initialize file state to null
   const formik = useFormik({
     initialValues: {
       email: "admin@admin.com",
       username: "admin123",
       password: "admin@123",
-      confirm_pwd: "admin@123",
+      confirm_pwd: "",
     },
-    validate: passwordValidate,
+    validate: registrationValidation,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      console.log("Form submitted with values:", values);
+      const errors = await registrationValidation(values);
+      if (Object.keys(errors).length === 0) {
+        // Proceed with form submission if there are no errors
+        values = Object.assign(values, { profile: file || "" });
+        console.log("Form submitted with values:", values);
+      }
     },
   });
-  //Formik dosent support the file upload
+
+  // Function to handle file upload
   const onUpload = async (e) => {
-    const base64 = "";
+    /*  console.log("File selected:", e.target.files[0]); */
+    const base64 = await convertToBase64(e.target.files[0]); // Corrected await position
+    /* console.log("Base64 data:", base64); */
     setFile(base64);
   };
 
   return (
     <div className="container mx-auto">
       <Toaster position="top-center" reverseOrder={false}></Toaster>
-      <div className="flex justify-center items-center h-screen ">
+      <div className="flex justify-center items-center h-screen">
         <div
           className={styles.glass}
           style={{
@@ -43,7 +53,7 @@ const Register = () => {
           }}
         >
           <div className="title flex flex-col items-center">
-            <h4 className="text-5xl ">Register Now</h4>
+            <h4 className="text-5xl">Register Now</h4>
             <span className="py-4 text-xl w-2/3 text-center text-gray-500">
               Happy to join you!
             </span>
@@ -52,9 +62,18 @@ const Register = () => {
           <form action="" className="py-1" onSubmit={formik.handleSubmit}>
             <div className="profile flex justify-center py-4">
               <label htmlFor="profile">
-                <img src={avatar} className={styles.profile_img} alt="avatar" />
+                <img
+                  src={file || avatar} // Use file or default avatar
+                  className={styles.profile_img}
+                  alt="avatar"
+                />
               </label>
-              <input type="file" name="profile" id="profile" />
+              <input
+                onChange={onUpload}
+                type="file"
+                name="profile"
+                id="profile"
+              />
             </div>
 
             <div className="textbook flex flex-col items-center gap-6">
@@ -101,4 +120,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;

@@ -54,3 +54,27 @@ export async function resetPasswordValidation(values) {
   }
   return errors;
 }
+
+// validate registration validation
+export async function registrationValidation(values) {
+  let errors = {};
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!values.email) {
+    errors.email = toast.error("Email Required...!");
+  } else if (!emailRegex.test(values.email)) {
+    errors.email = toast.error("Invalid Email");
+  } else {
+    delete errors.email; // Change 'error' to 'errors'
+  }
+
+  // Validate username
+  errors = { ...errors, ...(await userNameValidate(values)) }; // Change 'error' to 'errors'
+
+  // Validate password
+  errors = { ...errors, ...(await passwordValidate(values)) };
+
+  // Validate password match
+  errors = { ...errors, ...(await resetPasswordValidation(values)) };
+
+  return errors;
+}

@@ -13,14 +13,14 @@ const UserName = () => {
     validate: userNameValidate,
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       console.log("Form submitted with values:", values);
     },
   });
 
   return (
     <div className="container mx-auto">
-      <Toaster position="top-center" reverseOrder={false}></Toaster>
+      <Toaster position="top-center" />
       <div className="flex justify-center items-center h-screen ">
         <div className={styles.glass}>
           <div className="title flex flex-col items-center">
@@ -61,4 +61,5 @@ const UserName = () => {
     </div>
   );
 };
+
 export default UserName;
