@@ -17,7 +17,7 @@ const Register = () => {
       password: "admin@123",
       confirm_pwd: "",
     },
-    validate: registrationValidation,
+    validate: ralidationegistrationV,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {

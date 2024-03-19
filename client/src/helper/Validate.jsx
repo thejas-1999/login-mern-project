@@ -78,3 +78,40 @@ export async function registrationValidation(values) {
 
   return errors;
 }
+
+// Validate profile fields
+export async function profileValidation(values) {
+  let errors = {};
+
+  // Check if email is not a specific address
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!values.email) {
+    errors.email = toast.error("Email Required...!");
+  } else if (!emailRegex.test(values.email)) {
+    errors.email = toast.error("Invalid Email");
+  } else {
+    delete errors.email; // Change 'error' to 'errors'
+  }
+
+  // Check if first name is empty
+  if (!values.firstName) {
+    errors.firstName = toast.error("First Name is required");
+  }
+
+  // Check if last name is empty
+  if (!values.lastName) {
+    errors.lastName = toast.error("Last Name is required");
+  }
+
+  // Check if mobile number has 10 digits only
+  if (!/^\d{10}$/.test(values.mobileNumber)) {
+    errors.mobileNumber = toast.error("Mobile Number must be 10 digits");
+  }
+
+  // Check if address has more than 10 characters
+  if (!values.address || values.address.length < 10) {
+    errors.address = toast.error("Address must be at least 10 characters");
+  }
+
+  return errors;
+}
