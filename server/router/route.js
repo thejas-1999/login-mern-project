@@ -11,7 +11,7 @@ router.route("/register").post(controller.register); //register user
 
 /* router.route("/registerMail").post();  */ //send a mail
 router.route("/authendicate").post((req, res) => res.end()); //authendicate user
-router.route("/login").post(controller.login); //login to the app
+router.route("/login").post(controller.verifyUser, controller.login); //login to the app
 
 //GET Method
 router.route("/user/:username").get(controller.getUser); //user with username
