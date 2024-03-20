@@ -6,14 +6,24 @@ import ENV from "../config.js";
 //middleware for verify the user
 export async function verifyUser(req, res, next) {
   try {
-    const { username } = req.method == "GET" ? req.query : req.body;
+    let username;
+    // Determine whether the request method is GET or not
+    if (req.method === "GET") {
+      username = req.query.username; // Use req.query.username for GET requests
+    } else {
+      username = req.body.username; // Use req.body.username for other request methods
+    }
 
-    // check the user existance
-    let exist = await UserModel.findOne({ username });
-    if (!exist) return res.status(404).send({ error: "Can't find User!" });
+    // Check if the user exists
+    const user = await UserModel.findOne({ username });
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    // Pass user data to the next middleware or route handler
+    req.user = user;
     next();
   } catch (error) {
-    return res.status(404).send({ error: "Authentication Error" });
+    return res.status(500).send({ error: "Internal Server Error" });
   }
 }
 
@@ -124,9 +134,27 @@ export async function login(req, res) {
 
 /** GET: http://localhost:8080/api/user/example123 */
 export async function getUser(req, res) {
-  res.json(`getuser route `);
-}
+  const { username } = req.params;
 
+  try {
+    if (!username) {
+      return res.status(400).send({ error: "Invalid Username" });
+    }
+
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    /** remove password from user */
+    // mongoose return unnecessary data with object so convert it into json
+    const { password, ...rest } = Object.assign({}, user.toJSON());
+
+    return res.status(200).send(rest);
+  } catch (error) {
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+}
 /** PUT: http://localhost:8080/api/updateuser */
 export async function updateUser(req, res) {
   res.json(`updateuser route `);
