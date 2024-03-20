@@ -155,9 +155,37 @@ export async function getUser(req, res) {
     return res.status(500).send({ error: "Internal Server Error" });
   }
 }
-/** PUT: http://localhost:8080/api/updateuser */
+
+/** PUT: http://localhost:8080/api/updateuser 
+ * @param: {
+  "header" : "<token>"
+}
+body: {
+    firstName: '',
+    address : '',
+    profile : ''
+}
+*/
 export async function updateUser(req, res) {
-  res.json(`updateuser route `);
+  try {
+    const userId = req.query.id;
+    if (!userId) {
+      return res.status(401).send({ error: "User Not Found" });
+    }
+
+    const body = req.body;
+
+    // Update the data using promises
+    UserModel.updateOne({ _id: userId }, body)
+      .then(() => {
+        return res.status(201).send({ msg: "Record Updated" });
+      })
+      .catch((error) => {
+        return res.status(500).send({ error: "Error updating record" });
+      });
+  } catch (error) {
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
 }
 
 /** GET: http://localhost:8080/api/generateOTP */
