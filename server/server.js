@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import connect from "./database/Connection.js";
+import router from "./router/route.js";
 
 const app = express();
 
@@ -13,9 +14,13 @@ app.disable("x-powered-by"); //less hackers know about our stack
 
 const port = 8080;
 
+//HTTP GET Request
 app.get("/", (req, res) => {
   res.status(201).json("Home GET request");
 });
+
+//api routes
+app.use("/api", router);
 
 //start server only when we have a valid connection
 connect()
