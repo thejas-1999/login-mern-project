@@ -1,3 +1,6 @@
+import UserModel from "../model/User.model.js";
+import bcrypt from "bcrypt";
+
 /** POST: http://localhost:8080/api/register 
  * @param : {
   "username" : "example123",
@@ -10,11 +13,53 @@
   "profile": ""
 }
 */
-
 export async function register(req, res) {
-  res.json(`register now `);
-}
+  try {
+    const { username, password, profile, email } = req.body;
 
+    // check the existing user
+    const existUsername = UserModel.findOne({ username }).exec();
+    const existEmail = UserModel.findOne({ email }).exec();
+
+    Promise.all([existUsername, existEmail])
+      .then(([existingUser, existingEmail]) => {
+        if (existingUser) {
+          throw { error: "Please use a unique username" };
+        }
+        if (existingEmail) {
+          throw { error: "Please use a unique email" };
+        }
+
+        if (password) {
+          bcrypt
+            .hash(password, 10)
+            .then((hashedPassword) => {
+              const user = new UserModel({
+                username,
+                password: hashedPassword,
+                profile: profile || "",
+                email,
+              });
+
+              user
+                .save()
+                .then(() =>
+                  res.status(201).send({ msg: "User Registered Successfully" })
+                )
+                .catch((error) => res.status(500).send({ error }));
+            })
+            .catch(() => {
+              throw { error: "Unable to hash password" };
+            });
+        }
+      })
+      .catch((error) => {
+        res.status(500).send({ error });
+      });
+  } catch (error) {
+    res.status(500).send({ error });
+  }
+}
 /** POST: http://localhost:8080/api/login 
  * @param: {
   "username" : "example123",
